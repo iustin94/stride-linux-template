@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "StrideTemplate": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_NUGET_SIGNATURE_VERIFICATION": "false"
+      }
+    }
+  }
+}

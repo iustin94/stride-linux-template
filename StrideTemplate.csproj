@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <StrideGraphicsApi>OpenGL</StrideGraphicsApi>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Stride.CommunityToolkit.Linux" Version="1.0.0-preview.62" />
+    <PackageReference Include="Stride.CommunityToolkit.Bepu" Version="1.0.0-preview.62" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="assets/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="StrideTemplate.Tests/**" />
+    <Content Remove="StrideTemplate.Tests/**" />
+    <None Remove="StrideTemplate.Tests/**" />
+  </ItemGroup>
+
+  <Import Project="build/StrideAssetCompilerNativeLibraries.targets" />
+</Project>

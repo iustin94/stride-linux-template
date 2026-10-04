@@ -1,0 +1,33 @@
+<Project>
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Library.FreeImage" Version="3.18.0.3" GeneratePathProperty="true" />
+    <PackageReference Include="MonoGame.Library.FreeType" Version="2.13.2.5" GeneratePathProperty="true" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <AssetCompilerNativeLibraryFolder>$(MSBuildProjectDirectory)/obj/native/$(RuntimeIdentifier)</AssetCompilerNativeLibraryFolder>
+    <AssetCompilerLibraryPath>$(AssetCompilerNativeLibraryFolder)</AssetCompilerLibraryPath>
+    <AssetCompilerLibraryPath Condition="'$(LD_LIBRARY_PATH)' != ''">$(AssetCompilerNativeLibraryFolder):$(LD_LIBRARY_PATH)</AssetCompilerLibraryPath>
+  </PropertyGroup>
+
+  <UsingTask TaskName="SetChildProcessEnvironmentVariable" TaskFactory="RoslynCodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)/Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <Name ParameterType="System.String" Required="true" />
+      <Value ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs"><![CDATA[System.Environment.SetEnvironmentVariable(Name, Value);]]></Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="PrepareStrideAssetCompilerProcess" BeforeTargets="StrideCompileAsset">
+    <ItemGroup>
+      <AssetCompilerNativeLibrary Include="$(PkgMonoGame_Library_FreeImage)/runtimes/$(RuntimeIdentifier)/native/*" />
+      <AssetCompilerNativeLibrary Include="$(PkgMonoGame_Library_FreeType)/runtimes/$(RuntimeIdentifier)/native/*" />
+    </ItemGroup>
+    <Error Condition="'@(AssetCompilerNativeLibrary)' == ''" Text="No FreeImage/FreeType native libraries found for runtime '$(RuntimeIdentifier)' in the MonoGame.Library packages." />
+    <Copy SourceFiles="@(AssetCompilerNativeLibrary)" DestinationFolder="$(AssetCompilerNativeLibraryFolder)" SkipUnchangedFiles="true" />
+    <SetChildProcessEnvironmentVariable Name="LD_LIBRARY_PATH" Value="$(AssetCompilerLibraryPath)" />
+    <SetChildProcessEnvironmentVariable Name="DOTNET_NUGET_SIGNATURE_VERIFICATION" Value="false" />
+  </Target>
+</Project>
